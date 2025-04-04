@@ -1,0 +1,47 @@
+name: .NET CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    steps:
+      # Checkout the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Setup .NET SDK
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      # Restore Dependencies
+      - name: Restore Dependencies
+        run: dotnet restore "JARVIS.sln"
+
+      # Build the Solution
+      - name: Build Solution
+        run: dotnet build "JARVIS.sln" --configuration ${{ matrix.configuration }} --no-restore
+
+      # Execute Unit Tests
+      - name: Execute Unit Tests
+        run: dotnet test "JARVIS.sln" --configuration ${{ matrix.configuration }} --no-restore --verbosity normal
+
+      # Upload Build Artifacts
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: Build Output - ${{ matrix.configuration }}
+          path: bin/${{ matrix.configuration }}/
