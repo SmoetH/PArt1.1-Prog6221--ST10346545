@@ -1,8 +1,3 @@
-Here’s a detailed README.md file that explains how to use the chatbot JARVIS, based on your code, including setup, usage, features, and navigation: 
-
- 
-
- 
 
 JARVIS: Console-Based Chatbot 
 
